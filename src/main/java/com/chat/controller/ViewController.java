@@ -10,4 +10,9 @@ public class ViewController {
     public String register(){
         return "register";
     }
+
+    @RequestMapping("/index")
+    public String index(){
+        return "index";
+    }
 }
