@@ -1,6 +1,7 @@
 package com.chat.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -33,4 +34,7 @@ public class User {
     private String email;
 
     private String description;
+
+    @TableField(exist = false)//表示数据库表中没有该字段
+    private String checkCode;
 }
