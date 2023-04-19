@@ -1,5 +1,6 @@
 package com.chat.service;
 
+
 import com.chat.dao.UserDao;
 import com.chat.entity.User;
 import com.chat.utils.Email;
@@ -15,7 +16,6 @@ import java.util.Random;
 public class UserService {
     @Autowired
     UserDao dao;
-
     @Autowired
     RedisTemplate redisTemplate;
 
@@ -43,9 +43,8 @@ public class UserService {
         if (!user.getCheckCode().equals(code)){
             return Result.error("验证码输入错误");
         }
-
         //2、验证码正确   进行注册
-        int i = dao.insert(user);
+        dao.insert(user);
         return Result.ok("注册成功!");
     }
 }
