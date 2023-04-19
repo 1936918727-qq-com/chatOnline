@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--导入vue-->
+    <script src="/res/js/vue.js" type="text/javascript"></script>
+<!-- 导入element-ui组件-->
+    <script src="/res/js/index.js" type="text/javascript"></script>
+    <link href="/res/css/index.css" rel="stylesheet">
+</head>
+<style>
+    body{
+        /*background-color: #e1f3d8;*/
+        background-image: url("res/images/register.jpg");
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        margin: 0;
+    }
+    #register{
+        width: 100%;
+        height: 100vh;
+    }
+    .el-card{
+        width: 400px;
+        /*height: 500px;*/
+        margin: 0 auto;
+        margin-top: 25vh;
+        border: 1px solid #ccc;
+        background-color: rgba(255,255,255,0.4);
+        border-radius: 10px;
+    }
+    .code_input{
+        float: left;
+        width: 60%;
+    }
+    .code_btn{
+        margin-left: 5%;
+        width: 35%;
+    }
+    .register_btn{
+        width: 50%;
+    }
+    p{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /*text-align: center;*/
+    }
+    .el-container{
+        text-align: center;
+        height: 100vh;
+    }
+</style>
+<body>
+    <div id="register">
+        <el-container>
+            <el-main>
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <div style="text-align: center;font-size: 25px">欢迎注册ChatOnline</div>
+                    </div>
+                    <el-form id="form" status-icon :rules="formRules" ref="user" :model="user">
+
+                        <el-form-item prop="userName">
+                            <el-input v-model="user.userName" prefix-icon="el-icon-s-custom" placeholder="请输入用户名"></el-input>
+                        </el-form-item>
+
+                        <el-form-item prop="userEmail">
+                            <el-input v-model="user.email" prefix-icon="el-icon-message" type="text" placeholder="请输入邮箱"></el-input>
+                        </el-form-item>
+
+                        <el-form-item prop="Password">
+                            <el-input v-model="user.Password" prefix-icon="el-icon-lock" show-password type="password" placeholder="请输入密码" autocomplete="off"></el-input>
+                        </el-form-item>
+
+                        <el-form-item prop="rePassword">
+                            <el-input v-model="user.rePassword" prefix-icon="el-icon-lock" show-password type="password" placeholder="请再次输入密码"></el-input>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-input v-model="user.checkCode" class="code_input" placeholder="请输入验证码"></el-input>
+                            <el-button @click="sendCode" :disabled="buttonStatus" class="code_btn" type="primary">{{buttonText}}</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <p><el-button @click="register" class="register_btn" type="primary">提交注册</el-button></p>
+                </el-card>
+            </el-main>
+        </el-container>
+    </div>
+<script>
+    new Vue({
+        el:"#register",
+        data(){
+            var validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入密码'));
+                } else {
+                    if (this.user.rePassword !== '') {
+                        this.$refs.user.validateField('rePassword');
+                    }
+                    callback();
+                }
+            };
+            var validatePass2 = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入密码'));
+                } else if (value !== this.user.Password) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+            var emailCheck = (rule,value,callback) => {
+                var regEmail = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+                if(value === ''){
+                    callback(new Error("请输入邮箱"))
+                }else if(value !== ''){
+                    if(!regEmail.test(value)){
+                        callback(new Error("邮箱格式不正确"))
+                    }else{
+                        callback()
+                    }
+                }
+                else{
+                    callback()
+                }
+            };
+            return{
+                //按钮可用状态
+                buttonStatus:false,
+                buttonText:"发送验证码",
+                user:{
+                    userName:"",
+                    Password:"",
+                    Email:"",
+                    checkCode:"",   //验证码
+                    rePassword:""   //再次输入密码
+                },
+                formRules:{
+                    userName: [
+                        {required:true,message:"请输入用户名",trigger: 'blur' }
+                    ],
+                    Password: [
+                        { validator: validatePass, trigger: 'blur' }
+                    ],
+                    rePassword: [
+                        { validator: validatePass2, trigger: 'blur' }
+                    ],
+                    Email: [
+                        {required:true,trigger:"blur",validator:emailCheck}
+                    ],
+                }
+            }
+        },
+        methods:{
+            //校验表单
+            register_check(){
+                var result
+                //表单校验是否成功 valid 布尔值
+                this.$refs['user'].validate((valid)=>{
+                    valid ? result = true : result = false
+                })
+                return result
+            },
+            //注册按钮触发函数
+            register(){
+                var type = this.register_check()
+                type ? alert("注册成功"):alert("注册失败")
+            },
+            //发送验证码按钮事件
+            sendCode(){
+                var _this = this
+                //禁用按钮
+                _this.buttonStatus = true
+                _this.times()
+            },
+            //发送验证码 计时效果
+            times(){
+                var _this = this
+                var count = 5
+                var time = setInterval(()=>{
+                    _this.buttonText = count + 's'
+                    count--
+                    if(count < 0){
+                        //清除计时
+                        clearInterval(time)
+                        //更改按钮内容
+                        _this.buttonText = "重新发送"
+                        //启用按钮
+                        _this.buttonStatus = false
+                    }
+                },1000)
+            }
+        }
+    })
+</script>
+</body>
+</html>
