@@ -10,7 +10,15 @@
     <link href="/res/css/index.css" rel="stylesheet">
 </head>
 <style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    #box{
+        margin: 0 10vw;
+    }
     .el-header, .el-footer {
+        height: 10vh;
         background-color: #B3C0D1;
         color: #333;
         text-align: center;
@@ -25,10 +33,12 @@
     }
 
     .el-main {
+        height: 80vh;
         background-color: #E9EEF3;
         color: #333;
         text-align: center;
-        line-height: 160px;
+        /*line-height: 160px;*/
+        padding: 0;
     }
 
     body > .el-container {
@@ -42,6 +52,24 @@
 
     .el-container:nth-child(7) .el-aside {
         line-height: 320px;
+    }
+    .top{
+        height: 8%;
+        /*background-color: #00ff00;*/
+        border-bottom: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+    .content{
+        height: 57%;
+        /*background-color: #00ffff;*/
+        border-bottom: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+    .bottom{
+        height: 35%;
+        /*background-color: #8c939d;*/
+        border-bottom: 1px solid #ccc;
+        box-sizing: border-box;
     }
 </style>
 <body>
@@ -63,15 +91,21 @@
                     </el-submenu>
                 </el-submenu>
                 <el-menu-item index="3" disabled>消息中心</el-menu-item>
-                <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
+                <el-menu-item index="4"><a href="https://www.baidu.com" target="_blank">订单管理</a></el-menu-item>
             </el-menu>
         </el-header>
         <el-container>
             <el-aside width="200px">Aside</el-aside>
             <el-container>
-                <el-main>Main</el-main>
-                <el-footer>Footer</el-footer>
+                <el-main>
+                    <div class="top"></div>
+                    <div class="content"></div>
+                    <div class="bottom"></div>
+                </el-main>
             </el-container>
+        </el-container>
+        <el-container>
+            <el-footer>Footer</el-footer>
         </el-container>
     </el-container>
 </div>
