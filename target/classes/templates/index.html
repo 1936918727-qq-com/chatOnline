@@ -24,14 +24,46 @@
         text-align: center;
         line-height: 60px;
     }
-
     .el-aside {
-        background-color: #D3DCE6;
+        height: 80vh;
+        background-color:  #333333;
         color: #333;
-        text-align: center;
-        line-height: 200px;
     }
-
+    .el-aside .el-select{
+        text-align: center;
+    }
+    .el-select{
+        margin-top: 1vh;
+        margin-bottom: 1vh;
+        box-sizing: border-box;
+    }
+    .friend_message{
+        /*margin-top: 1vh;*/
+        /*width: 100%;*/
+        height: 8vh;
+        /*background-color: #cf9236;*/
+        display: flex;
+        align-items: center;
+    }
+    .friend_message:hover{
+        background-color: #ccc;
+    }
+    .friend_message div{
+        margin-left: 4px;
+        margin-right: 4px;
+        box-sizing: border-box;
+    }
+    .friend_message div p:nth-child(1){
+        color: black;
+    }
+    .current_date{
+        /*float: right;*/
+        clear: both;
+    }
+    .gray_small{
+        color: #ccc;
+        font-size: 10px;
+    }
     .el-main {
         height: 80vh;
         background-color: #E9EEF3;
@@ -40,11 +72,6 @@
         /*line-height: 160px;*/
         padding: 0;
     }
-
-    body > .el-container {
-        margin-bottom: 40px;
-    }
-
     .el-container:nth-child(5) .el-aside,
     .el-container:nth-child(6) .el-aside {
         line-height: 260px;
@@ -58,6 +85,9 @@
         /*background-color: #00ff00;*/
         border-bottom: 1px solid #ccc;
         box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .bottom{
         height: 35%;
@@ -135,14 +165,45 @@
             </el-menu>
         </el-header>
         <el-container>
-            <el-aside width="200px">Aside</el-aside>
+            <el-aside width="250px">
+                <el-select
+                        v-model="value"
+                        multiple
+                        filterable
+                        remote
+                        reserve-keyword
+                        placeholder="请输入关键词"
+                        :remote-method="remoteMethod"
+                        :loading="loading">
+                    <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <a href="" style="text-decoration: none">
+                    <div class="friend_message" v-for="item in userMessage">
+                        <div>
+                            <el-avatar src=""></el-avatar>
+                        </div>
+                        <div>
+                            <p>
+                                <span>{{item.friendName}}</span>
+                                <span class="gray_small current_date">{{`${new Date().getHours()}:${new Date().getMinutes()}`}}</span>
+                            </p>
+                            <p class="gray_small">{{item.value}}</p>
+                        </div>
+                    </div>
+                </a>
+            </el-aside>
             <el-container>
                 <el-main>
-                    <div class="top"></div>
+                    <div class="top">{{friendName}}</div>
                     <div class="content">
                         <div :class="item.flag === 1 ? 'receive_view':'receive_view sender_view'" v-for="item in userMessage">
                             <div class="head_view">
-                                <el-avatar src="{{item.headImg}}"></el-avatar>
+                                <el-avatar src="{{item.myHeadImg}}"></el-avatar>
                             </div>
                             <div class="chat_message">{{item.value}}</div>
                         </div>
@@ -178,34 +239,97 @@
                 activeIndex: '1',
                 activeIndex2: '1',
                 textarea:'',
+                friendName:'范冰冰',
+                currentDate:'',
+                options: [],
+                value: [],
+                list: [],
+                loading: false,
+                states: ["Alabama", "Alaska", "Arizona",
+                    "Arkansas", "California", "Colorado",
+                    "Connecticut", "Delaware", "Florida",
+                    "Georgia", "Hawaii", "Idaho", "Illinois",
+                    "Indiana", "Iowa", "Kansas", "Kentucky",
+                    "Louisiana", "Maine", "Maryland",
+                    "Massachusetts", "Michigan", "Minnesota",
+                    "Mississippi", "Missouri", "Montana",
+                    "Nebraska", "Nevada", "New Hampshire",
+                    "New Jersey", "New Mexico", "New York",
+                    "North Carolina", "North Dakota", "Ohio",
+                    "Oklahoma", "Oregon", "Pennsylvania",
+                    "Rhode Island", "South Carolina",
+                    "South Dakota", "Tennessee", "Texas",
+                    "Utah", "Vermont", "Virginia",
+                    "Washington", "West Virginia", "Wisconsin",
+                    "Wyoming"],
                 userMessage:[
                     {
-                        headImg:'/res/images/2.png',
+                        friendName:'范冰冰',
+                        friendHeadImg:'',
+                        myHeadImg:'/res/images/2.png',
                         value:'在吗',
                         flag:1
                     },
                     {
-                        headImg:'/res/images/2.png',
+                        friendName:'张三',
+                        friendHeadImg:'',
+                        myHeadImg:'/res/images/2.png',
                         value:'？',
                         flag:0
                     },
                     {
-                        headImg:'/res/images/2.png',
+                        friendName:'李四',
+                        friendHeadImg:'',
+                        myHeadImg:'/res/images/2.png',
                         value:'在干嘛？',
                         flag:1
                     },
                     {
-                        headImg:'/res/images/2.png',
+                        friendName:'王五',
+                        friendHeadImg:'',
+                        myHeadImg:'/res/images/2.png',
                         value:'呼吸',
                         flag:0
                     },
                     {
-                        headImg:'/res/images/2.png',
+                        friendName:'赵六',
+                        friendHeadImg:'',
+                        myHeadImg:'/res/images/2.png',
                         value:'吃饭了吗',
                         flag:1
                     },
                     {
-                        headImg:'/res/images/2.png',
+                        friendName:'吴彦祖',
+                        friendHeadImg:'',
+                        myHeadImg:'/res/images/2.png',
+                        value:'吃的是什么',
+                        flag:1
+                    },
+                    {
+                        friendName:'王五',
+                        friendHeadImg:'',
+                        myHeadImg:'/res/images/2.png',
+                        value:'呼吸',
+                        flag:0
+                    },
+                    {
+                        friendName:'赵六',
+                        friendHeadImg:'',
+                        myHeadImg:'/res/images/2.png',
+                        value:'吃饭了吗',
+                        flag:1
+                    },
+                    {
+                        friendName:'吴彦祖',
+                        friendHeadImg:'',
+                        myHeadImg:'/res/images/2.png',
+                        value:'吃的是什么',
+                        flag:1
+                    },
+                    {
+                        friendName:'吴彦祖',
+                        friendHeadImg:'',
+                        myHeadImg:'/res/images/2.png',
                         value:'吃的是什么',
                         flag:1
                     },
@@ -215,6 +339,20 @@
         methods:{
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
+            },
+            remoteMethod(query) {
+                if (query !== '') {
+                    this.loading = true;
+                    setTimeout(() => {
+                        this.loading = false;
+                        this.options = this.list.filter(item => {
+                            return item.label.toLowerCase()
+                                .indexOf(query.toLowerCase()) > -1;
+                        });
+                    }, 200);
+                } else {
+                    this.options = [];
+                }
             }
         }
     })
