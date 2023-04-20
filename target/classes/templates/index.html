@@ -59,17 +59,57 @@
         border-bottom: 1px solid #ccc;
         box-sizing: border-box;
     }
-    .content{
-        height: 57%;
-        /*background-color: #00ffff;*/
-        border-bottom: 1px solid #ccc;
-        box-sizing: border-box;
-    }
     .bottom{
         height: 35%;
         /*background-color: #8c939d;*/
         border-bottom: 1px solid #ccc;
         box-sizing: border-box;
+        position: relative;
+    }
+    .bottom .el-button{
+        width: 6vw;
+        position: absolute;
+        bottom: 3vh;
+        right: 3vh;
+    }
+    .content{
+        height: 57%;
+        background-color: #333333;
+        border-bottom: 1px solid #ccc;
+        box-sizing: border-box;
+        overflow: auto;
+    }
+    .receive_view{
+        width: 30vw;
+        height: 10vh;
+        /*background-color: #a4da89;*/
+        display: flex;
+        align-items: center;
+        clear: both;
+    }
+    .head_view{
+        margin-left: 1vh;
+        margin-right: 1vh;
+    }
+    .chat_message{
+        width: 17vw;
+        height: 7vh;
+        background-color: white;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        border-radius: 10px;
+    }
+    .sender_view{
+        float: right;
+        flex-direction: row-reverse;
+    }
+    .clear{
+        clear: both;
+    }
+    .sender_view .chat_message{
+        display: flex;
+        flex-direction: row-reverse;
     }
 </style>
 <body>
@@ -99,8 +139,28 @@
             <el-container>
                 <el-main>
                     <div class="top"></div>
-                    <div class="content"></div>
-                    <div class="bottom"></div>
+                    <div class="content">
+                        <div :class="item.flag === 1 ? 'receive_view':'receive_view sender_view'" v-for="item in userMessage">
+                            <div class="head_view">
+                                <el-avatar src="{{item.headImg}}"></el-avatar>
+                            </div>
+                            <div class="chat_message">{{item.value}}</div>
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        <el-input
+                                suffix="el-button"
+                                resize="none"
+                                rows="9"
+                                type="textarea"
+                                placeholder="请输入内容"
+                                v-model="textarea"
+                                maxlength="30"
+                                show-word-limit
+                        >
+                        </el-input>
+                        <el-button type="primary" plain>发送</el-button>
+                    </div>
                 </el-main>
             </el-container>
         </el-container>
@@ -116,7 +176,40 @@
         data(){
             return{
                 activeIndex: '1',
-                activeIndex2: '1'
+                activeIndex2: '1',
+                textarea:'',
+                userMessage:[
+                    {
+                        headImg:'/res/images/2.png',
+                        value:'在吗',
+                        flag:1
+                    },
+                    {
+                        headImg:'/res/images/2.png',
+                        value:'？',
+                        flag:0
+                    },
+                    {
+                        headImg:'/res/images/2.png',
+                        value:'在干嘛？',
+                        flag:1
+                    },
+                    {
+                        headImg:'/res/images/2.png',
+                        value:'呼吸',
+                        flag:0
+                    },
+                    {
+                        headImg:'/res/images/2.png',
+                        value:'吃饭了吗',
+                        flag:1
+                    },
+                    {
+                        headImg:'/res/images/2.png',
+                        value:'吃的是什么',
+                        flag:1
+                    },
+                ]
             };
         },
         methods:{
