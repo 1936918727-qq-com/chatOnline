@@ -64,18 +64,18 @@
                 <div slot="header" class="clearfix">
                     <div style="text-align: center;font-size: 25px">登录系统</div>
                 </div>
-                <el-form id="form" status-icon>
+                <el-form id="form" status-icon :rules="formRules" ref="user" :model="user">
 
                     <el-form-item prop="userEmail">
-                        <el-input  prefix-icon="el-icon-message" type="text" placeholder="请输入邮箱"></el-input>
+                        <el-input v-model="user.email" prefix-icon="el-icon-message" type="text" placeholder="请输入邮箱"></el-input>
                     </el-form-item>
 
-                    <el-form-item prop="Password">
-                        <el-input  prefix-icon="el-icon-lock" show-password type="password" placeholder="请输入密码" autocomplete="off"></el-input>
+                    <el-form-item prop="password">
+                        <el-input v-model="user.password" prefix-icon="el-icon-lock" show-password type="password" placeholder="请输入密码" autocomplete="off"></el-input>
                     </el-form-item>
 
                 </el-form>
-                <p><el-button class="login_btn" type="primary">登录</el-button></p>
+                <p><el-button @click="loginButton" class="login_btn" type="primary">登录</el-button></p>
             </el-card>
         </el-main>
     </el-container>
@@ -83,7 +83,61 @@
 <script>
     new Vue({
         el:"#login",
-        data(){},
+        data(){
+            return{
+                user:{
+                    email: "",
+                    password:"",
+                },
+                //申明表单验证规则
+                formRules:{
+                    email:[
+                        {required:true,message:"邮箱不能为空",trigger:"blur"}
+                    ],
+                    password:[
+                        {required:true,message:"密码不能为空",trigger:"blur"}
+                    ],
+
+                }
+            }
+        },
+        methods:{
+            //表单检验  检验表单是否成功
+            register_check(){
+                var result;
+                this.$refs['user'].validate((valid)=>{
+                    if(valid){
+                        result=true;
+                    }else{
+                        result=false;
+                    }
+                })
+                return result;
+            },
+            loginButton(){
+                var _this = this;
+                //提交前判断表单验证
+                var boo = _this.register_check()
+                if(boo){
+                    $.ajax({
+                        url:"/user/login",
+                        type:"post",
+                        contentType:"application/json",//表示发送的是json格式数据
+                        dataType:"json",//表示接受后端传来的json数据
+                        data:JSON.stringify(_this.user),//将user转换成JSON格式字符串
+                        success:function (res) {
+                            // console.log(res)
+                            //弹框提示
+                            _this.$message({
+                                type:res.code===200?"success":"error",
+                                message:res.msg,
+                            })
+                        }
+
+                    })
+                }
+            }
+        }
 
     })
 </script>

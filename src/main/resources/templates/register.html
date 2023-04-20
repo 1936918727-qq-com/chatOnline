@@ -8,6 +8,8 @@
 <!-- 导入element-ui组件-->
     <script src="/res/js/index.js" type="text/javascript"></script>
     <link href="/res/css/index.css" rel="stylesheet">
+    <!--    导入jquery-->
+    <script src="/res/js/jquery.min.js" type="text/javascript"></script>
 </head>
 <style>
     body{
@@ -68,12 +70,12 @@
                             <el-input v-model="user.userName" prefix-icon="el-icon-s-custom" placeholder="请输入用户名"></el-input>
                         </el-form-item>
 
-                        <el-form-item prop="userEmail">
+                        <el-form-item prop="email">
                             <el-input v-model="user.email" prefix-icon="el-icon-message" type="text" placeholder="请输入邮箱"></el-input>
                         </el-form-item>
 
-                        <el-form-item prop="Password">
-                            <el-input v-model="user.Password" prefix-icon="el-icon-lock" show-password type="password" placeholder="请输入密码" autocomplete="off"></el-input>
+                        <el-form-item prop="password">
+                            <el-input v-model="user.password" prefix-icon="el-icon-lock" show-password type="password" placeholder="请输入密码" autocomplete="off"></el-input>
                         </el-form-item>
 
                         <el-form-item prop="rePassword">
@@ -107,7 +109,7 @@
             var validatePass2 = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请再次输入密码'));
-                } else if (value !== this.user.Password) {
+                } else if (value !== this.user.password) {
                     callback(new Error('两次输入密码不一致!'));
                 } else {
                     callback();
@@ -134,8 +136,8 @@
                 buttonText:"发送验证码",
                 user:{
                     userName:"",
-                    Password:"",
-                    Email:"",
+                    password:"",
+                    email:"",
                     checkCode:"",   //验证码
                     rePassword:""   //再次输入密码
                 },
@@ -143,13 +145,13 @@
                     userName: [
                         {required:true,message:"请输入用户名",trigger: 'blur' }
                     ],
-                    Password: [
+                    password: [
                         { validator: validatePass, trigger: 'blur' }
                     ],
                     rePassword: [
                         { validator: validatePass2, trigger: 'blur' }
                     ],
-                    Email: [
+                    email: [
                         {required:true,trigger:"blur",validator:emailCheck}
                     ],
                 }
@@ -167,20 +169,64 @@
             },
             //注册按钮触发函数
             register(){
+                var _this = this;
                 var type = this.register_check()
-                type ? alert("注册成功"):alert("注册失败")
+                // type ? alert("注册成功"):alert("注册失败")
+                //提交前判断表单验证
+                var boo = _this.register_check()
+                // alert(boo)
+                if(boo){
+                    $.ajax({
+                        url:"/user/register",
+                        type:"post",
+                        contentType:"application/json",//表示发送的是json格式数据
+                        dataType:"json",//表示接受后端传来的json数据
+                        data:JSON.stringify(_this.user),//将user转换成JSON格式字符串
+                        success:function (res) {
+                            //弹框提示
+                            _this.$message({
+                                type:res.code===200?"success":"error",
+                                message:res.msg,
+                            })
+                            // console.log(res)
+                        }
+                    })
+                }
             },
             //发送验证码按钮事件
             sendCode(){
-                var _this = this
-                //禁用按钮
-                _this.buttonStatus = true
-                _this.times()
+                var _this=this;
+                var type = _this.register_check();
+                if(!type){
+                    return
+                }
+                //请求发送邮箱接口
+                $.ajax({
+                    url:"/user/sendCode",
+                    type:"get",
+                    dataType:"json",//表示接受后端传来的json数据
+                    data:{
+                        "email":_this.user.email,
+                    },
+                    success:function (res) {
+                        //弹框提示
+                        _this.$message({
+                            type:res.code===200?"success":"error",
+                            message:res.msg,
+                        })
+                        //请求成功
+                        if(res.code===200){
+                            //禁用按钮
+                            _this.buttonStatus=true;
+                            _this.times();
+                        }
+                    },
+                })
             },
             //发送验证码 计时效果
             times(){
                 var _this = this
-                var count = 5
+                var count = 30
                 var time = setInterval(()=>{
                     _this.buttonText = count + 's'
                     count--
@@ -193,7 +239,8 @@
                         _this.buttonStatus = false
                     }
                 },1000)
-            }
+            },
+
         }
     })
 </script>
