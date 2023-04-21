@@ -17,13 +17,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 @ToString   //生成ToString方法
 public class User {
     @TableId(type = IdType.AUTO)    //表示id是主键  且自增
-    private int id;
+    private Integer id;
 
     private String userName;
 
     private String password;
 
-    private String head_img;
+    private String headImg;
 
     private String sex;
 
