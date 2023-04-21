@@ -8,11 +8,16 @@
     <!-- 导入element-ui组件-->
     <script src="/res/js/index.js" type="text/javascript"></script>
     <link href="/res/css/index.css" rel="stylesheet">
+    <!--    导入jquery-->
+    <script src="/res/js/jquery.min.js" type="text/javascript"></script>
 </head>
 <style>
     *{
         margin: 0;
         padding: 0;
+    }
+    body{
+        background-color: rgb(151,157,167);
     }
     #box{
         margin: 0 10vw;
@@ -26,7 +31,7 @@
     }
     .el-aside {
         height: 80vh;
-        background-color:  #333333;
+        background-color:  rgb(39,42,55);;
         color: #333;
     }
     .el-aside .el-select{
@@ -46,7 +51,7 @@
         align-items: center;
     }
     .friend_message:hover{
-        background-color: #ccc;
+        background-color: #373d4d;
     }
     .friend_message div{
         margin-left: 4px;
@@ -104,7 +109,7 @@
     }
     .content{
         height: 57%;
-        background-color: #333333;
+        background-color: rgb(39,42,55);
         border-bottom: 1px solid #ccc;
         box-sizing: border-box;
         overflow: auto;
@@ -183,13 +188,13 @@
                     </el-option>
                 </el-select>
                 <a href="" style="text-decoration: none">
-                    <div @click="selectFriend(item.friendName)" class="friend_message" v-for="item in userMessage">
+                    <div @click="selectFriend(item.userName)" class="friend_message" v-for="item in friendList">
                         <div>
-                            <el-avatar src=""></el-avatar>
+                            <el-avatar :src="item.headImg"></el-avatar>
                         </div>
                         <div>
                             <p>
-                                <span>{{item.friendName}}</span>
+                                <span>{{item.userName}}</span>
                                 <span class="gray_small current_date">{{`${new Date().getHours()}:${new Date().getMinutes()}`}}</span>
                             </p>
                             <p class="gray_small">{{item.value}}</p>
@@ -239,15 +244,7 @@
                 webSocket:'',
                 wsUri:'',
 
-                friendList:[
-                    {
-                        id:'',
-                        headImg:'',
-                        friendName:'彭于晏',
-                        lastRecord:'',
-                        lastRecordTime:''
-                    }
-                ],
+                friendList:[],
                 friendNametip:'',
 
                 activeIndex: '1',
@@ -365,8 +362,44 @@
             this.webSocket.close();//在该组件销毁时关闭该连接以节约资源
         },
         methods:{
+            //请求聊天记录
+            getChatRecord(){
+                //获取本地存储的用户邮箱
+                var email = sessionStorage.getItem("email");
+
+                $.ajax({
+                    url:"/user/userid",
+                    type: "gte",
+
+                })
+
+                // $.ajax({
+                //     url:"",
+                //     type: "POST",
+                //     dataType: "JSON",
+                //     contentType: "application/json",
+                //
+                // })
+            },
+
+            //请求用户信息 头像 用户名
+            getChatList(){
+                var that = this
+              $.ajax({
+                  url:"/user/list",
+                  type:"get",
+                  contentType:"application/json",
+                  dataType:"JSON",
+                  success:function (res){
+                      that.friendList = res.data
+                      console.log(that.friendList)
+                  }
+              })
+            },
             selectFriend(name){
                 this.friendNametip = name
+                $('.friend_message').css("background-color",'#373d4d')
+                    // bgColor = '#373d4d';
             },
             SendButton(){
                 console.log(this.userMessage[0].value)
@@ -425,6 +458,10 @@
                     this.options = [];
                 }
             }
+        },
+        mounted(){
+            this.getChatList()
+            this.getChatRecord()
         }
     })
 </script>
