@@ -183,7 +183,7 @@
                     </el-option>
                 </el-select>
                 <a href="" style="text-decoration: none">
-                    <div class="friend_message" v-for="item in userMessage">
+                    <div @click="selectFriend(item.friendName)" class="friend_message" v-for="item in userMessage">
                         <div>
                             <el-avatar src=""></el-avatar>
                         </div>
@@ -199,7 +199,7 @@
             </el-aside>
             <el-container>
                 <el-main>
-                    <div class="top">{{friendName}}</div>
+                    <div class="top">{{friendNametip}}</div>
                     <div class="content">
                         <div :class="item.flag === 1 ? 'receive_view':'receive_view sender_view'" v-for="item in userMessage">
                             <div class="head_view">
@@ -238,9 +238,20 @@
             return{
                 webSocket:'',
                 wsUri:'',
+
+                friendList:[
+                    {
+                        id:'',
+                        headImg:'',
+                        friendName:'彭于晏',
+                        lastRecord:'',
+                        lastRecordTime:''
+                    }
+                ],
+                friendNametip:'',
+
                 activeIndex: '1',
                 activeIndex2: '1',
-                friendName:'范冰冰',
                 currentDate:'',
                 options: [],
                 value: [],
@@ -354,6 +365,9 @@
             this.webSocket.close();//在该组件销毁时关闭该连接以节约资源
         },
         methods:{
+            selectFriend(name){
+                this.friendNametip = name
+            },
             SendButton(){
                 console.log(this.userMessage[0].value)
                 this.webSocket.send(JSON.stringify(this.userMessage[0]))
