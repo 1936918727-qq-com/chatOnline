@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository//表示是dao层
 public interface UserDao extends BaseMapper<User>{
+    User selectByEmail(String email);
 
 }

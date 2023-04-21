@@ -88,4 +88,12 @@ public class UserService {
         List<User> users = dao.selectList(null);
         return Result.ok(200,"查询成功",users);
     }
+
+    //根据邮箱查询用户id
+    public Result selectByEmail(String email){
+
+        User user = dao.selectByEmail(email);
+
+        return Result.ok(200,"查询成功",user.getId());
+    }
 }

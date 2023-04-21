@@ -61,4 +61,15 @@ public class UserContrller {
         }
     }
 
+    //根据邮箱查询用户id
+    @GetMapping("/userid")
+    public Result userId(String email){
+        try {
+            return service.selectByEmail(email);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error(500,"发生了异常",e.getMessage());
+        }
+    }
+
 }
