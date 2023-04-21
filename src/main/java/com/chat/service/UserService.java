@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -80,5 +81,11 @@ public class UserService {
             return Result.error("密码输入错误!");
         }
         return Result.ok("登录成功!");
+    }
+
+    //查询用户
+    public Result selectAlluser(){
+        List<User> users = dao.selectList(null);
+        return Result.ok(200,"查询成功",users);
     }
 }

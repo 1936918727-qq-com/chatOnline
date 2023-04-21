@@ -21,8 +21,8 @@ public class ChatRecords {
     private String toName;
     private String content;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")//处理前端接收的
-    @JsonFormat(pattern = "yyyy-MM-dd")//处理后端接收的
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")//处理前端接收的
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")//处理后端接收的
     private Date time;
 
     @TableField(exist = false)

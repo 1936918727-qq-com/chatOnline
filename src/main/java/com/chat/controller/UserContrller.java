@@ -50,4 +50,15 @@ public class UserContrller {
         }
     }
 
+    //查询使用用户
+    @GetMapping("/list")//localhost:端口号/user/list
+    public Result userList(){
+        try {
+            return service.selectAlluser();
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error(500,"发生了异常",e.getMessage());
+        }
+    }
+
 }
