@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chat.dao.ChatRecordsDao"><!--dao包路径-->
+    <!--    通过商品id查询商品详情-->
+    <select id="selectByToId" resultType="com.chat.entity.ChatRecords">
+        select * from chat_records
+        where fromid=#{fromId} and toid=#{toId}
+    </select>
+</mapper>
