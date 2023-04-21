@@ -210,17 +210,17 @@
                     </div>
                     <div class="bottom">
                         <el-input
+                                v-model="userMessage[0].value"
                                 suffix="el-button"
                                 resize="none"
                                 rows="9"
                                 type="textarea"
                                 placeholder="请输入内容"
-                                v-model="textarea"
                                 maxlength="30"
                                 show-word-limit
                         >
                         </el-input>
-                        <el-button type="primary" plain>发送</el-button>
+                        <el-button @click="SendButton" type="primary" plain>发送</el-button>
                     </div>
                 </el-main>
             </el-container>
@@ -236,9 +236,10 @@
         el:"#box",
         data(){
             return{
+                webSocket:'',
+                wsUri:'',
                 activeIndex: '1',
                 activeIndex2: '1',
-                textarea:'',
                 friendName:'范冰冰',
                 currentDate:'',
                 options: [],
@@ -264,6 +265,7 @@
                     "Wyoming"],
                 userMessage:[
                     {
+                        id:1,
                         friendName:'范冰冰',
                         friendHeadImg:'',
                         myHeadImg:'/res/images/2.png',
@@ -271,6 +273,7 @@
                         flag:1
                     },
                     {
+                        id:2,
                         friendName:'张三',
                         friendHeadImg:'',
                         myHeadImg:'/res/images/2.png',
@@ -278,6 +281,7 @@
                         flag:0
                     },
                     {
+                        id:3,
                         friendName:'李四',
                         friendHeadImg:'',
                         myHeadImg:'/res/images/2.png',
@@ -285,6 +289,7 @@
                         flag:1
                     },
                     {
+                        id:4,
                         friendName:'王五',
                         friendHeadImg:'',
                         myHeadImg:'/res/images/2.png',
@@ -292,6 +297,7 @@
                         flag:0
                     },
                     {
+                        id:5,
                         friendName:'赵六',
                         friendHeadImg:'',
                         myHeadImg:'/res/images/2.png',
@@ -299,6 +305,7 @@
                         flag:1
                     },
                     {
+                        id:6,
                         friendName:'吴彦祖',
                         friendHeadImg:'',
                         myHeadImg:'/res/images/2.png',
@@ -306,6 +313,7 @@
                         flag:1
                     },
                     {
+                        id:7,
                         friendName:'王五',
                         friendHeadImg:'',
                         myHeadImg:'/res/images/2.png',
@@ -313,6 +321,7 @@
                         flag:0
                     },
                     {
+                        id:8,
                         friendName:'赵六',
                         friendHeadImg:'',
                         myHeadImg:'/res/images/2.png',
@@ -320,6 +329,7 @@
                         flag:1
                     },
                     {
+                        id:9,
                         friendName:'吴彦祖',
                         friendHeadImg:'',
                         myHeadImg:'/res/images/2.png',
@@ -327,6 +337,7 @@
                         flag:1
                     },
                     {
+                        id:10,
                         friendName:'吴彦祖',
                         friendHeadImg:'',
                         myHeadImg:'/res/images/2.png',
@@ -336,7 +347,53 @@
                 ]
             };
         },
+        created(){
+          this.initWebSocket();
+        },
+        beforeDestroy() {
+            this.webSocket.close();//在该组件销毁时关闭该连接以节约资源
+        },
         methods:{
+            SendButton(){
+                console.log(this.userMessage[0].value)
+                this.webSocket.send(JSON.stringify(this.userMessage[0]))
+                this.userMessage[0].value=''
+            },
+            initWebSocket(){
+                this.initWebSocketUri();
+
+                //建立连接
+                if(typeof (WebSocket) == "undefined"){
+                    console.log("当前浏览器不支持WebSocket")
+                }else {
+                    this.webSocket = new WebSocket(this.wsUri)
+                    console.log("this.webSocket",this.webSocket)
+
+                    this.webSocket.onopen = this.webSocketOnopen;
+                    this.webSocket.onerror = this.webSocketOnerror;
+                    this.webSocket.onmessage = this.webSocketOnmessage;
+                    this.webSocket.onclose = this.webSocketOnclose;
+                }
+            },
+            initWebSocketUri(){
+                this.wsUri = "ws://127.0.0.1:8080/webSocket/"+this.userMessage[1].id
+            },
+            webSocketOnopen(){
+                console.log("连接成功")
+            },
+            webSocketOnerror(){
+                console.log("出错")
+            },
+            webSocketOnmessage(res){
+                console.log("来自后端的消息",res)
+                const receiveMessage = JSON.parse(res.data);
+                this.userMessage.push(receiveMessage)
+            },
+            webSocketOnclose(){
+                console.log("关闭连接")
+            },
+
+
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
             },
