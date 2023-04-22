@@ -84,23 +84,26 @@ public class UserService {
     }
 
     //查询用户
-    public Result selectAlluser(){
-        List<User> users = dao.selectList(null);
+    public Result selectFriends(String email){
+        List<User> users = dao.selectFriends(email);
         return Result.ok(200,"查询成功",users);
     }
 
     //根据邮箱查询用户id
     public Result selectByEmail(String email){
-        System.out.println("邮箱:"+email);
 
-//        User user = dao.selectByEmail(email);
-//        System.out.println(user);
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("email",email);
         User user = dao.selectOne(queryWrapper);
-        System.out.println(user);
-
 
         return Result.ok(200,"查询成功",user.getId());
+    }
+
+    public Result selectUserById(String id){
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("id",id);
+        User user = dao.selectOne(wrapper);
+        System.out.println("userID>>>>>>>>"+user.getId());
+        return Result.ok(200,"查询成功",user);
     }
 }

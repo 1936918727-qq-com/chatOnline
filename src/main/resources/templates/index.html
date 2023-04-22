@@ -385,12 +385,16 @@
             //请求用户信息 头像 用户名
             getChatList(){
                 var that = this
+                var email = sessionStorage.getItem("email");
+                console.log("登录的email："+email)
               $.ajax({
                   url:"/user/list",
                   type:"get",
                   contentType:"application/json",
                   dataType:"JSON",
+                  data: {"email":email},
                   success:function (res){
+                      console.log("好友列表：",res)
                       that.friendList = res.data
                       console.log(that.friendList)
                   }

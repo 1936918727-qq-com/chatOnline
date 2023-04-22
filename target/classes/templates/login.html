@@ -132,9 +132,12 @@
                                 type:res.code===200?"success":"error",
                                 message:res.msg,
                             })
-                            //本地存储：sessionStorage.setItem()设置，通过sessionStorage.getItem()取出
-                            sessionStorage.setItem("email",_this.user.email);
-                            window.location.href="/index";
+                            if(res.code===200){
+                                //本地存储：sessionStorage.setItem()设置，通过sessionStorage.getItem()取出
+                                sessionStorage.setItem("email",_this.user.email);
+                                window.location.href="/index";
+                            }
+
                         }
 
                     })

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.chat.entity.User;
 import com.chat.service.UserService;
+import com.chat.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,11 +37,15 @@ public class WebSocKetServer {
         /**
          * 查询用户
           */
-        User user = new User();
+        System.out.println("打印测试");
+//        User user = service.selectUserById(id);
+        System.out.println("打印测试2");
         if(ObjectUtils.isNull(id)){
             log.error("token无效或无法解析");
         }
-        setMap(session,user);
+        System.out.println("ID>>>>"+id);
+//        System.out.println("session+user:"+session+"<<<<USER>>>"+user);
+//        setMap(session,user);
     }
 
     private void setMap(Session session, User user){

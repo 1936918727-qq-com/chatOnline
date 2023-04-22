@@ -20,4 +20,10 @@ public class ViewController {
     public String login(){
         return "login";
     }
+
+    //聊天室界面
+    @RequestMapping("/room")
+    public String room(){
+        return "chatRoom";
+    }
 }

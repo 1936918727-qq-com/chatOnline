@@ -53,9 +53,9 @@ public class UserContrller {
 
     //查询使用用户
     @GetMapping("/list")//localhost:端口号/user/list
-    public Result userList(){
+    public Result userList(String email){
         try {
-            return service.selectAlluser();
+            return service.selectFriends(email);
         }catch (Exception e){
             e.printStackTrace();
             return Result.error(500,"发生了异常",e.getMessage());
@@ -65,7 +65,7 @@ public class UserContrller {
     //根据邮箱查询用户id
     @GetMapping("/userid")
     public Result userId(String email){
-        System.out.println("email:"+email);
+//        System.out.println("email:"+email);
         try {
             return service.selectByEmail(email);
         }catch (Exception e){
@@ -73,5 +73,19 @@ public class UserContrller {
             return Result.error(500,"发生了异常",e.getMessage());
         }
     }
+
+    //根据id查询用户
+    @GetMapping("/userInfo")
+    public Result selectUserById(String id){
+//        System.out.println("email:"+email);
+        try {
+            return service.selectUserById(id);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error(500,"发生了异常",e.getMessage());
+        }
+    }
+
+
 
 }
