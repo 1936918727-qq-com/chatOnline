@@ -45,6 +45,7 @@ public class UserContrller {
         try {
             return service.login(user);
         }catch (Exception e){
+            System.out.println("发生了异常-------------------------------------------------------");
             e.printStackTrace();
             return Result.error(500,"发生了异常!",e.getMessage());
         }
@@ -64,6 +65,7 @@ public class UserContrller {
     //根据邮箱查询用户id
     @GetMapping("/userid")
     public Result userId(String email){
+        System.out.println("email:"+email);
         try {
             return service.selectByEmail(email);
         }catch (Exception e){

@@ -91,8 +91,15 @@ public class UserService {
 
     //根据邮箱查询用户id
     public Result selectByEmail(String email){
+        System.out.println("邮箱:"+email);
 
-        User user = dao.selectByEmail(email);
+//        User user = dao.selectByEmail(email);
+//        System.out.println(user);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("email",email);
+        User user = dao.selectOne(queryWrapper);
+        System.out.println(user);
+
 
         return Result.ok(200,"查询成功",user.getId());
     }

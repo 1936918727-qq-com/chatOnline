@@ -246,6 +246,8 @@
 
                 friendList:[],
                 friendNametip:'',
+                email:'',
+
 
                 activeIndex: '1',
                 activeIndex2: '1',
@@ -366,20 +368,18 @@
             getChatRecord(){
                 //获取本地存储的用户邮箱
                 var email = sessionStorage.getItem("email");
+                console.log(email)
 
                 $.ajax({
                     url:"/user/userid",
-                    type: "gte",
-
+                    type: "get",
+                    dataType: "JSON",
+                    // data: {"email": '1936918727@qq.com'},
+                    data:{"email":email},
+                    success:function (res){
+                        console.log(res)
+                    }
                 })
-
-                // $.ajax({
-                //     url:"",
-                //     type: "POST",
-                //     dataType: "JSON",
-                //     contentType: "application/json",
-                //
-                // })
             },
 
             //请求用户信息 头像 用户名
@@ -396,16 +396,22 @@
                   }
               })
             },
+
+            //选中好友事件
             selectFriend(name){
                 this.friendNametip = name
                 $('.friend_message').css("background-color",'#373d4d')
                     // bgColor = '#373d4d';
             },
+
+            //发送消息按钮事件
             SendButton(){
                 console.log(this.userMessage[0].value)
                 this.webSocket.send(JSON.stringify(this.userMessage[0]))
                 this.userMessage[0].value=''
             },
+
+            //初始化websocket
             initWebSocket(){
                 this.initWebSocketUri();
 
